@@ -38,3 +38,7 @@ const U = union {
         try expect(true);
     }
 };
+
+test "this will be skipped" {
+    return error.SkipZigTest;
+}
