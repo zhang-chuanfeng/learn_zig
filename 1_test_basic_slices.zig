@@ -27,4 +27,7 @@ test "basic slices" {
 
     try expect(@TypeOf(slice.ptr) == [*]i32);
     try expect(@intFromPtr(slice.ptr) == @intFromPtr(&array));
+
+    // slices have array bounds checking. If you try to access something out of
+    // of bounds, you'll get a safety check failure.
 }
