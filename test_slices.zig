@@ -36,3 +36,10 @@ test "slice pointer" {
     try expect(ptr2[0] == 3);
     try expect(@TypeOf(ptr2) == *[1]u8);
 }
+
+test "null terminated slice" {
+    const slice: [:0]const u8 = "hello";
+    try expect(slice.len == 5);
+    // Sentinel-terminated slices allow elment access to the len index
+    try expect(slice[5] == 0);
+}
