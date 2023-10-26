@@ -43,3 +43,12 @@ test "null terminated slice" {
     // Sentinel-terminated slices allow elment access to the len index
     try expect(slice[5] == 0);
 }
+
+test "sentinel mismatch" {
+    var array = [_]u8{ 3, 2, 1, 0 };
+
+    var runtime_length: usize = 2;
+    const slice = array[0..runtime_length :1];
+    // const slice = array[0..runtime_length :0]; // panic
+    _ = slice;
+}
