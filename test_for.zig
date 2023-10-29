@@ -79,3 +79,48 @@ test "for else" {
     };
     try expect(result == 12);
 }
+
+// labeled for
+
+test "nested break" {
+    var count: usize = 0;
+    outer: for (1..6) |_| {
+        for (1..6) |_| {
+            count += 1;
+            break :outer;
+        }
+    }
+    try expect(count == 1);
+}
+
+test "nested continue" {
+    var count: usize = 0;
+    outer: for (1..9) |_| {
+        for (1..6) |_| {
+            count += 1;
+            continue :outer;
+        }
+    }
+    try expect(count == 8);
+}
+
+// inline for
+
+test "inline for loop" {
+    const nums = [_]i32{ 2, 4, 6 };
+    var sum: usize = 0;
+    inline for (nums) |i| {
+        const T = switch (i) {
+            2 => f32,
+            4 => i8,
+            6 => bool,
+            else => unreachable,
+        };
+        sum += typeNameLength(T);
+    }
+    try expect(sum == 9);
+}
+
+fn typeNameLength(comptime T: type) usize {
+    return @typeName(T).len;
+}
