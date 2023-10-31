@@ -22,10 +22,10 @@ test "defer basic" {
 // the reverse order they were run.
 fn deferUnwindExample() void {
     defer {
-        print("1 ", .{});
+        print("1 \n", .{});
     }
     defer {
-        print("2 ", .{});
+        print("2 \n", .{});
     }
     if (false) {
         // derfers are not run if they are never executed.
