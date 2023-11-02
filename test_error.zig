@@ -123,3 +123,37 @@ fn doAThing7(str: []u8) error{InvalidChar}!void {
 }
 
 //errdefer
+const Allocator = std.mem.Allocator;
+const Foo = struct {
+    data: u32,
+};
+
+fn tryToAllocateFoo(allocator: Allocator) !*Foo {
+    return allocator.create(Foo);
+}
+
+fn deallocateFoo(allocator: Allocator, fooo: *Foo) void {
+    allocator.destroy(fooo);
+}
+
+fn getFooData() !u32 {
+    return 666;
+}
+
+fn createFoo(allocator: Allocator, param: i32) !*Foo {
+    const fooo = getFoo: {
+        var fooo = try tryToAllocateFoo(allocator);
+        errdefer deallocateFoo(allocator, fooo);
+
+        fooo.data = try getFooData();
+        break :getFoo fooo;
+    };
+    errdefer deallocateFoo(allocator, fooo);
+
+    if (param > 1337) return error.InvalidParam;
+    return fooo;
+}
+
+test "createFoo" {
+    try std.testing.expectError(error.InvalidParam, createFoo(std.testing.allocator, 2468));
+}
