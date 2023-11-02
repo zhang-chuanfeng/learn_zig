@@ -49,3 +49,32 @@ test "function" {
     try expect(do_op(add, 5, 6) == 11);
     try expect(do_op(sub2, 5, 6) == -1);
 }
+
+// Struct,unions,and arrays can sometimes be more efficiently passed
+// as a reference, since a copy could be arbitrarily expensive depending on
+// the size. When these types are passed as parameters, Zig may choose
+// to copy and pass by value, or pass by reference, whichever way Zig decides
+// will be faster.
+
+// For extern functions,Zig follows the C ABI for passing structs and unions
+// by values.
+
+// anytype
+fn addFortyTwo(x: anytype) @TypeOf(x) {
+    return x + 42;
+}
+
+test "fn test inference" {
+    try expect(addFortyTwo(1) == 43);
+    try expect(@TypeOf(addFortyTwo(1)) == comptime_int);
+    var y: i64 = 2;
+    try expect(addFortyTwo(y) == 44);
+    try expect(@TypeOf(addFortyTwo(y)) == i64);
+}
+
+// fn reflection
+const math = std.math;
+test "fn reflection" {
+    try expect(@typeInfo(@TypeOf(expect)).Fn.params[0].type.? == bool);
+    try expect(@typeInfo(@TypeOf(math.Log2Int)).Fn.is_generic);
+}
