@@ -157,3 +157,29 @@ fn createFoo(allocator: Allocator, param: i32) !*Foo {
 test "createFoo" {
     try std.testing.expectError(error.InvalidParam, createFoo(std.testing.allocator, 2468));
 }
+
+const Foo2 = struct {
+    data: *u32,
+};
+
+fn genFoo2s(allocator: Allocator, num: usize) ![]Foo2 {
+    var foos = try allocator.alloc(Foo2, num);
+    errdefer allocator.free(foos);
+
+    var num_allocated: usize = 0;
+    errdefer for (foos[0..num_allocated]) |foo2| {
+        allocator.destroy(foo2.data);
+    };
+    for (foos, 0..) |*foo2, i| {
+        foo2.data = try allocator.create(u32);
+        num_allocated += 1;
+
+        if (i > 3) return error.TooManyFoos;
+        foo2.data.* = try getFooData();
+    }
+    return foos;
+}
+
+test "genFoos" {
+    try std.testing.expectError(error.TooManyFoos, genFoo2s(std.testing.allocator, 5));
+}
