@@ -183,3 +183,43 @@ fn genFoo2s(allocator: Allocator, num: usize) ![]Foo2 {
 test "genFoos" {
     try std.testing.expectError(error.TooManyFoos, genFoo2s(std.testing.allocator, 5));
 }
+
+// error union reflection
+test "error union" {
+    var foo3: anyerror!i32 = undefined;
+    foo3 = 1234;
+    foo3 = error.SomeError;
+
+    // use compile-time reflection to access the payload type of an error union
+    try comptime expect(@typeInfo(@TypeOf(foo3)).ErrorUnion.payload == i32);
+
+    // use compile-time reflection to access the error set type of an error union
+    try comptime expect(@typeInfo(@TypeOf(foo3)).ErrorUnion.error_set == anyerror);
+}
+
+// merging error sets
+const A = error{
+    NotDir,
+
+    /// A doc comment
+    PathNotFound,
+};
+const B = error{
+    OutOfMemory,
+
+    /// B doc comment
+    PathNotFound,
+};
+
+const C = A || B;
+fn foo4() C!void {
+    return error.NotDir;
+}
+
+test "merge error set" {
+    if (foo4()) {} else |err| switch (err) {
+        error.OutOfMemory => @panic("unexpected"),
+        error.PathNotFound => @panic("unexpected"),
+        error.NotDir => {},
+    }
+}
