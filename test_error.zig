@@ -223,3 +223,18 @@ test "merge error set" {
         error.NotDir => {},
     }
 }
+
+// Error Return Traces
+
+// A pointer StackTrace
+// pub const StackTrace = struct {
+//      index:usize,
+//      instruction_address:[N]usize
+// };
+
+// zig return error fn
+// maked as "no-inline" in LLVM IR
+// fn __zig_return_error(stack_trace: *StackTrace) void {
+//     stack_trace.instruction_address[stack_trace.index] = @returnAddress();
+//     stack_trace.index = (stack_trace.index+1) % N;
+// }
