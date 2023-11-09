@@ -110,3 +110,16 @@ fn sum(numbers: []const i32) i32 {
 test "variable values" {
     try expect(sum_of_first_primes == 1060);
 }
+
+// generic data structure
+fn List(comptime T: type) type {
+    return struct {
+        items: []T,
+        len: usize,
+    };
+}
+
+// The generic List data structure can be instantiated by
+// a type
+var buffer: [10]i32 = undefined;
+var list = List(i32){ .items = &buffer, .len = 0 };
