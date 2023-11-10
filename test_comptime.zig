@@ -123,3 +123,19 @@ fn List(comptime T: type) type {
 // a type
 var buffer: [10]i32 = undefined;
 var list = List(i32){ .items = &buffer, .len = 0 };
+
+// anonymous struct name
+const Node = struct {
+    next: ?*Node,
+    name: []const u8,
+};
+
+var node_a = Node{
+    .next = null,
+    .name = &"Node A",
+};
+
+var node_b = Node{
+    .next = &node_a,
+    .name = &"Node B",
+};
