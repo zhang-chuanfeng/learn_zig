@@ -67,7 +67,7 @@ fn addFortyTwo(x: anytype) @TypeOf(x) {
 test "fn test inference" {
     try expect(addFortyTwo(1) == 43);
     try expect(@TypeOf(addFortyTwo(1)) == comptime_int);
-    var y: i64 = 2;
+    const y: i64 = 2;
     try expect(addFortyTwo(y) == 44);
     try expect(@TypeOf(addFortyTwo(y)) == i64);
 }
