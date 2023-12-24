@@ -8,7 +8,7 @@ test "using slices for strings" {
     const world: []const u8 = "世界";
 
     var all_together: [100]u8 = undefined;
-    var start: usize = 0;
+    const start: usize = 0;
     const all_together_slice = all_together[start..];
     const hello_world = try fmt.bufPrint(all_together_slice, "{s} {s}", .{ hello, world });
 
@@ -17,7 +17,7 @@ test "using slices for strings" {
 
 // slice array
 test "slice pointer" {
-    var a: []u8 = undefined;
+    const a: []u8 = undefined;
     try expect(@TypeOf(a) == []u8);
     var array: [10]u8 = undefined;
     const ptr = &array;
@@ -25,7 +25,9 @@ test "slice pointer" {
     try expect(ptr.len == 10);
 
     var start: usize = 0;
+    start = 0;
     var end: usize = 5;
+    end = 5;
     const slice = ptr[start..end];
     try expect(slice.len == (end - start));
     try expect(@TypeOf(slice) == []u8);
@@ -47,7 +49,7 @@ test "null terminated slice" {
 test "sentinel mismatch" {
     var array = [_]u8{ 3, 2, 1, 0 };
 
-    var runtime_length: usize = 2;
+    const runtime_length: usize = 2;
     const slice = array[0..runtime_length :1];
     // const slice = array[0..runtime_length :0]; // panic
     _ = slice;
