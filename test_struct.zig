@@ -67,7 +67,7 @@ test "struct namespaced variable" {
 // struct field order is determined by the compiler optimal performance.
 // however, you can still calculate a struct base pointer given a field pointer.
 fn setYBasedOnX(x: *f32, y: f32) void {
-    const point = @fieldParentPtr(Point, "x", x);
+    const point: *Point = @fieldParentPtr("x", x);
     point.y = y;
 }
 
@@ -97,7 +97,7 @@ fn LinkedList(comptime T: type) type {
 test "linked list" {
     try expect(LinkedList(i32) == LinkedList(i32));
 
-    var list = LinkedList(i32){
+    const list = LinkedList(i32){
         .first = null,
         .last = null,
         .len = 0,
@@ -112,7 +112,7 @@ test "linked list" {
         .next = null,
         .data = 1234,
     };
-    var list2 = ListOfInts{
+    const list2 = ListOfInts{
         .first = &node,
         .last = &node,
         .len = 1,
@@ -158,19 +158,19 @@ test "@bitCast between packed structs" {
 fn doTheTest() !void {
     try expect(@sizeOf(Full) == 2);
     try expect(@sizeOf(Divided) == 2);
-    var full = Full{ .number = 0x1234 };
-    var divided: Divided = @bitCast(full);
+    const full = Full{ .number = 0x1234 };
+    const divided: Divided = @bitCast(full);
     try expect(divided.half1 == 0x34);
     try expect(divided.quarter3 == 0x2);
     try expect(divided.quarter4 == 0x1);
 
-    var ordered: [2]u8 = @bitCast(full);
+    const ordered: [2]u8 = @bitCast(full);
     switch (native_endian) {
-        .Big => {
+        .big => {
             try expect(ordered[0] == 0x12);
             try expect(ordered[1] == 0x34);
         },
-        .Little => {
+        .little => {
             // std.debug.print("little\n", .{});
             try expect(ordered[0] == 0x34);
             try expect(ordered[1] == 0x12);
