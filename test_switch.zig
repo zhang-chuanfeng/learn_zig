@@ -131,7 +131,7 @@ fn withSwitch(any: AnySlice) usize {
 }
 
 test "inline for and inline else similarity" {
-    var any = AnySlice{ .c = "hello" };
+    const any = AnySlice{ .c = "hello" };
     try expect(withFor(any) == 5);
     try expect(withSwitch(any) == 5);
 }
@@ -155,6 +155,6 @@ fn getNum(u: U) u32 {
 }
 
 test "test" {
-    var u = U{ .b = 42 };
+    const u = U{ .b = 42 };
     try expect(getNum(u) == 42);
 }
