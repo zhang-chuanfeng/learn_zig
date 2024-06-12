@@ -12,7 +12,7 @@ test "pointer arithmetic with many-item pointer" {
 
 test "pointer arithmetic with slices" {
     const array = [_]i32{ 1, 2, 3, 4 };
-    var length: usize = 0;
+    const length: usize = 0;
     var slice = array[length..array.len];
 
     try expect(slice[0] == 1);
@@ -27,7 +27,7 @@ test "pointer arithmetic with slices" {
 
 test "pointer slicing" {
     var array = [_]u8{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-    var start: usize = 2;
+    const start: usize = 2;
     const slice = array[start..4];
     try expect(slice.len == 2);
 
